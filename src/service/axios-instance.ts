@@ -13,12 +13,11 @@ axiosInstance.interceptors.response.use(
   response => response,
   (error) => error
 )
-
-export function get<ResponseType>(url: string, config: AxiosRequestConfig = {}) {
+function get<ResponseType>(url: string, config: AxiosRequestConfig = {}) {
   return axiosInstance.get<ResponseType>(url, config)
 }
 
-export function post<ResponseType, RequestType = never>(
+function post<ResponseType, RequestType = never>(
   url: string,
   data: RequestType,
   config?: AxiosRequestConfig
@@ -26,7 +25,7 @@ export function post<ResponseType, RequestType = never>(
   return axiosInstance.post<ResponseType>(url, data, config)
 }
 
-export function put<ResponseType, RequestType = never>(
+function put<ResponseType, RequestType = never>(
   url: string,
   data: RequestType,
   config?: AxiosRequestConfig
@@ -34,6 +33,13 @@ export function put<ResponseType, RequestType = never>(
   return axiosInstance.put<ResponseType>(url, data, config)
 }
 
-export function del<ResponseType>(url: string, config?: AxiosRequestConfig) {
+function del<ResponseType>(url: string, config?: AxiosRequestConfig) {
   return axiosInstance.delete<ResponseType>(url, config)
+}
+
+export const api = {
+  get,
+  post,
+  put,
+  del
 }
