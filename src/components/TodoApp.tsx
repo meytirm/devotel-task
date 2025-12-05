@@ -1,6 +1,6 @@
 import Input from "./ui/Input.tsx";
 import TodoListContainer from "./TodoListContainer.tsx";
-import CreateTodoForm from "./CreateTodoForm.tsx";
+import CreateTodoForm from "./common/CreateTodoForm.tsx";
 
 const TodoApp = () => {
 
