@@ -29,38 +29,40 @@ const TodoListContainer = () => {
     dispatch(updateTodo({task: {...todo, completed: !todo.completed}}))
   }
 
-  function handleEditTodo(todo: TodoType){
+  function handleEditTodo(todo: TodoType) {
     setTodoTask(todo)
     setIsOpenEditModal(true)
   }
 
   useEffect(() => {
-      dispatch(setTodos(data ? data.todos : []))
+    dispatch(setTodos(data ? data.todos : []))
   }, [data, dispatch])
 
   if (isError) {
-    return <NetworkError onReload={() => refetch()} />
+    return <NetworkError onReload={() => refetch()}/>
   }
 
   if (isLoading) return (
-    <NetworkLoading />
+    <NetworkLoading/>
   )
 
   return (
     <div className="flex flex-col gap-4 h-[500px] overflow-y-auto">
-      {todos.length === 0 ? <div className="flex justify-center p-4 bg-purple-100 rounded-md">There is no todos!</div> : todos.map(todo => <TodoCard
-        name={todo.todo}
-        key={todo.id}
-        completed={todo.completed}
-        onRemove={() => handleRemoveTodo(todo)}
-        onCompleteToggle={() => handleCompleteToggle(todo)}
-        onEdit={() => handleEditTodo(todo)}
-        id={todo.id}
-        selectedId={todoTask.id}
-        loading={update}
-      />)}
-      <DeleteTodoModal isOpen={isOpenRemoveModal} onClose={setIsOpenRemoveModal} task={todoTask} />
-      <EditTodoModal isOpen={isOpenEditModal} onClose={setIsOpenEditModal} task={todoTask} />
+      {todos.length === 0 ?
+        <div className="flex justify-center p-4 bg-purple-100 rounded-md">There is no todos!</div> : todos.map(todo =>
+          <TodoCard
+            name={todo.todo}
+            key={todo.id}
+            completed={todo.completed}
+            onRemove={() => handleRemoveTodo(todo)}
+            onCompleteToggle={() => handleCompleteToggle(todo)}
+            onEdit={() => handleEditTodo(todo)}
+            id={todo.id}
+            selectedId={todoTask.id}
+            loading={update}
+          />)}
+      <DeleteTodoModal isOpen={isOpenRemoveModal} onClose={setIsOpenRemoveModal} task={todoTask}/>
+      <EditTodoModal isOpen={isOpenEditModal} onClose={setIsOpenEditModal} task={todoTask}/>
     </div>
   )
 }
