@@ -10,7 +10,7 @@ import type {TodoType} from "../types/todos.ts";
 import EditTodoModal from "./common/EditTodoModal.tsx";
 import {
   DndContext,
-  closestCenter
+  closestCenter, type DragEndEvent
 } from "@dnd-kit/core";
 
 import {
@@ -50,7 +50,7 @@ const TodoListContainer = ({todos, refetch, isError, isLoading}: Props) => {
   )
 
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
     if (!over || active.id === over.id) return;
