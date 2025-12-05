@@ -6,7 +6,7 @@ const Input = (props: InputHTMLAttributes<HTMLInputElement>) => {
   const {className, ...rest} = props;
   return (
     <input type="text" {...rest} className={twMerge(
-      'border-2 border-gray-300 rounded-md p-2 hover:border-gray-500 focus:border-gray-300',
+      'border-2 border-gray-300 rounded-md p-2 outline-none',
       className
     )}
     />
