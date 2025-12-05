@@ -4,3 +4,8 @@ export interface TodoType {
   completed: boolean;
   userId: number;
 }
+
+export type DeletedTodoType = TodoType & {
+  isDeleted: boolean,
+  deletedOn: Date
+}
