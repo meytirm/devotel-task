@@ -9,10 +9,10 @@ const axiosInstance: AxiosInstance = axios.create({
   }
 })
 
-axiosInstance.interceptors.response.use(
-  response => response,
-  (error) => error
-)
+// axiosInstance.interceptors.response.use(
+//   response => response,
+//   (error) => error
+// )
 function get<ResponseType>(url: string, config: AxiosRequestConfig = {}) {
   return axiosInstance.get<ResponseType>(url, config)
 }

@@ -1,53 +1,84 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {todoService} from "../../service/todo";
-import type {TodoType} from "../../types/todos.ts";
+import type {DeletedTodoType, TodoType} from "../../types/todos.ts";
 
-interface TodosState {
-  loading: boolean;
+export interface TodosState {
+  loading: {
+    create: boolean;
+    remove: boolean;
+    update: boolean;
+  }
+  todos: TodoType[];
 }
 
 const initialState: TodosState = {
-  loading: false,
+  loading: {
+    create: false,
+    remove: false,
+    update: false
+  },
+  todos: []
 };
 
-export const createTodo = createAsyncThunk(
+export const createTodo = createAsyncThunk<TodoType, string>(
   'createTodo',
-  async (task: TodoType) => {
+  async (task: string) => {
     const res = await todoService.create(task)
-    return res.data
+    return {...res.data, isLocal: true} as TodoType
   })
 
-export const removeTodo = createAsyncThunk(
+export const removeTodo = createAsyncThunk<DeletedTodoType, {id: number, isLocal?: boolean}>(
   'removeTodo',
-  async (id: number) => {
+  async ({id, isLocal}: {id: number, isLocal?: boolean}) => {
+    if (isLocal) {
+      return {id} as DeletedTodoType
+    }
     const res = await todoService.remove(id)
     return res.data
   })
 
-export const updateTodo = createAsyncThunk(
+export const updateTodo = createAsyncThunk<TodoType, { task: TodoType }>(
   'updateTodo',
-  async ({id, task}: {id: number, task: TodoType}) => {
-    const res = await todoService.update(id, task)
+  async ({task}: {task: TodoType,}) => {
+    console.log(task)
+    if (task.isLocal) {
+      return task as TodoType
+    }
+    const res = await todoService.update(task.id, {todo: task.todo, completed: task.completed})
     return res.data
   })
 
 export const todoSlice = createSlice({
   name: 'todo',
   initialState,
-  reducers: {},
+  reducers: {
+    setTodos: (state, action) => {
+      state.todos.push(...action.payload)
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(createTodo.pending, (state) => {
-      state.loading = true
-    }).addCase(createTodo.fulfilled, (state) => {
-      state.loading = false
+      state.loading.create = true
+    }).addCase(createTodo.fulfilled, (state, action) => {
+      state.todos.unshift(action.payload)
+      state.loading.create = false
     }).addCase(removeTodo.pending, (state) => {
-      state.loading = true
-    }).addCase(removeTodo.fulfilled, (state) => {
-      state.loading = false
-    }).addCase(updateTodo.pending, (state) => {
-      state.loading = true
-    }).addCase(updateTodo.fulfilled, (state) => {
-      state.loading = false
+      state.loading.remove = true
+    }).addCase(removeTodo.fulfilled, (state, action) => {
+      state.todos = state.todos.filter(todo => todo.id !== action.payload.id)
+      state.loading.remove = false
+    })
+      .addCase(updateTodo.pending, (state) => {
+      state.loading.update = true
+    }).addCase(updateTodo.fulfilled, (state, action) => {
+      state.loading.update = false
+      const index = state.todos.findIndex(todo => todo.id === action.payload.id)
+      if (index !== -1) {
+        state.todos[index] = action.payload
+      }
     })
   }
 })
+
+export const {setTodos} = todoSlice.actions
+export default todoSlice.reducer

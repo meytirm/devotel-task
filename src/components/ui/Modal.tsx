@@ -1,4 +1,5 @@
 import {type Dispatch, type ReactNode, type SetStateAction, useEffect} from "react";
+import {XIcon} from "lucide-react";
 
 const Modal = ({children, isOpen = false, onClose, title = 'title'}: Props) => {
 
@@ -23,10 +24,12 @@ const Modal = ({children, isOpen = false, onClose, title = 'title'}: Props) => {
 
 
   return (isOpen && <div className="flex flex-col items-center justify-center bg-black/60 fixed inset-0" onClick={handleCloseModal}>
-      <div className="bg-white md:w-[400px] w-auto rounded-md p-4">
+      <div className="bg-white md:w-[400px] w-auto rounded-md p-4" onClick={(e) => e.stopPropagation()}>
           <div className="flex justify-between items-center">
-              <div>{title}</div>
-              <div onClick={handleCloseModal}>close</div>
+              <div className="font-bold">{title}</div>
+              <div>
+                  <XIcon onClick={handleCloseModal} size={20} className="cursor-pointer" />
+              </div>
           </div>
           <div>{children}</div>
       </div>
