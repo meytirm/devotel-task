@@ -1,8 +1,8 @@
-import Input from "./ui/Input.tsx";
-import Button from "./ui/Button.tsx";
+import Input from "../ui/Input.tsx";
+import Button from "../ui/Button.tsx";
 import {LoaderCircleIcon} from "lucide-react";
-import {createTodo} from "../store/todo/todoSlice.ts";
-import type {AppDispatch, RootState} from "../store";
+import {createTodo} from "../../store/todo/todoSlice.ts";
+import type {AppDispatch, RootState} from "../../store";
 import {useDispatch, useSelector} from "react-redux";
 import {z} from "zod";
 import {type ChangeEvent, type FormEvent, useState} from "react";
@@ -17,7 +17,7 @@ const CreateTodoForm = () => {
   const {create} = useSelector((state: RootState) => state.loading)
 
   function handleAddTodo(task: string) {
-    dispatch(createTodo(task)).finally(() =>
+    dispatch(createTodo(task)).then(() =>
       setTodo(''))
   }
 
