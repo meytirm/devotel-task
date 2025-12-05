@@ -1,17 +1,26 @@
 import {api} from "../axios-instance.ts";
+import type {PaginatedResponse} from "../../types/api.ts";
+import type {TodoType} from "../../types/todos.ts";
 
-export function findAll() {
-  return api.get("/todos")
+function findAll() {
+  return api.get<PaginatedResponse<{ todos: TodoType[] }>>("/todos")
 }
 
-export function create(task: string) {
+function create(task: TodoType) {
   return api.post('/todos', task)
 }
 
-export function remove(id: number) {
+function remove(id: number) {
   return api.del(`/todos/${id}`)
 }
 
-export function update(id: number, task: string) {
+function update(id: number, task: TodoType) {
   return api.put(`/todos/${id}`, task)
+}
+
+export const todoService = {
+  findAll,
+  create,
+  remove,
+  update
 }
