@@ -1,6 +1,6 @@
 import Input from "./ui/Input.tsx";
 import Button from "./ui/Button.tsx";
-import TodoCard from "./common/TodoCard.tsx";
+import TodoListContainer from "./TodoListContainer.tsx";
 
 const TodoApp = () => {
   return <div className="flex justify-center items-center w-full h-[100vh]">
@@ -14,7 +14,7 @@ const TodoApp = () => {
         <div className="">
           <Input className="" placeholder="Search..." />
         </div>
-        <TodoCard />
+        <TodoListContainer />
       </div>
     </div>
   </div>
