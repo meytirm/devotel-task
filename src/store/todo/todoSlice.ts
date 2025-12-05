@@ -1,6 +1,7 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {todoService} from "../../service/todo";
 import type {DeletedTodoType, TodoType} from "../../types/todos.ts";
+import {createTodoCases, removeTodoCases, updateTodoCases} from "./todoCases.ts";
 
 export interface TodosState {
   loading: {
@@ -53,30 +54,13 @@ export const todoSlice = createSlice({
   initialState,
   reducers: {
     setTodos: (state, action) => {
-      state.todos.push(...action.payload)
+      state.todos = [...action.payload]
     }
   },
   extraReducers: (builder) => {
-    builder.addCase(createTodo.pending, (state) => {
-      state.loading.create = true
-    }).addCase(createTodo.fulfilled, (state, action) => {
-      state.todos.unshift(action.payload)
-      state.loading.create = false
-    }).addCase(removeTodo.pending, (state) => {
-      state.loading.remove = true
-    }).addCase(removeTodo.fulfilled, (state, action) => {
-      state.todos = state.todos.filter(todo => todo.id !== action.payload.id)
-      state.loading.remove = false
-    })
-      .addCase(updateTodo.pending, (state) => {
-      state.loading.update = true
-    }).addCase(updateTodo.fulfilled, (state, action) => {
-      state.loading.update = false
-      const index = state.todos.findIndex(todo => todo.id === action.payload.id)
-      if (index !== -1) {
-        state.todos[index] = action.payload
-      }
-    })
+    createTodoCases(builder, createTodo)
+    removeTodoCases(builder, removeTodo)
+    updateTodoCases(builder, updateTodo)
   }
 })
 
