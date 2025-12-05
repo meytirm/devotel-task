@@ -1,10 +1,8 @@
+import TodoApp from "./components/TodoApp.tsx";
 
 function App() {
-
   return (
-    <div className="bg-red-100">
-      hello
-    </div>
+    <TodoApp/>
   )
 }
 
