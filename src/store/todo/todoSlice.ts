@@ -5,7 +5,7 @@ import type {DeletedTodoType, TodoType} from "../../types/todos.ts";
 export interface TodosState {
   loading: {
     create: boolean;
-    delete: boolean;
+    remove: boolean;
     update: boolean;
   }
   todos: TodoType[];
@@ -14,7 +14,7 @@ export interface TodosState {
 const initialState: TodosState = {
   loading: {
     create: false,
-    delete: false,
+    remove: false,
     update: false
   },
   todos: []
@@ -24,20 +24,27 @@ export const createTodo = createAsyncThunk<TodoType, string>(
   'createTodo',
   async (task: string) => {
     const res = await todoService.create(task)
-    return res.data as TodoType
+    return {...res.data, isLocal: true} as TodoType
   })
 
-export const removeTodo = createAsyncThunk<DeletedTodoType, number>(
+export const removeTodo = createAsyncThunk<DeletedTodoType, {id: number, isLocal?: boolean}>(
   'removeTodo',
-  async (id: number) => {
+  async ({id, isLocal}: {id: number, isLocal?: boolean}) => {
+    if (isLocal) {
+      return {id} as DeletedTodoType
+    }
     const res = await todoService.remove(id)
     return res.data
   })
 
-export const updateTodo = createAsyncThunk<TodoType, {id: number, task: {todo: string, completed: boolean}}>(
+export const updateTodo = createAsyncThunk<TodoType, { task: TodoType }>(
   'updateTodo',
-  async ({id, task}: {id: number, task: {todo: string, completed: boolean}}) => {
-    const res = await todoService.update(id, task)
+  async ({task}: {task: TodoType,}) => {
+    console.log(task)
+    if (task.isLocal) {
+      return task as TodoType
+    }
+    const res = await todoService.update(task.id, {todo: task.todo, completed: task.completed})
     return res.data
   })
 
@@ -53,14 +60,15 @@ export const todoSlice = createSlice({
     builder.addCase(createTodo.pending, (state) => {
       state.loading.create = true
     }).addCase(createTodo.fulfilled, (state, action) => {
-      state.todos.push(action.payload)
+      state.todos.unshift(action.payload)
       state.loading.create = false
     }).addCase(removeTodo.pending, (state) => {
-      state.loading.delete = true
+      state.loading.remove = true
     }).addCase(removeTodo.fulfilled, (state, action) => {
       state.todos = state.todos.filter(todo => todo.id !== action.payload.id)
-      state.loading.delete = false
-    }).addCase(updateTodo.pending, (state) => {
+      state.loading.remove = false
+    })
+      .addCase(updateTodo.pending, (state) => {
       state.loading.update = true
     }).addCase(updateTodo.fulfilled, (state, action) => {
       state.loading.update = false
