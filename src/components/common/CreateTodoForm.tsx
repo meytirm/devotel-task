@@ -42,13 +42,10 @@ const CreateTodoForm = () => {
   }
 
   return (
-    <form
-      className="flex flex-col justify-center items-center gap-4 mt-4"
-      onSubmit={handleOnSubmit}
-    >
+    <form onSubmit={handleOnSubmit}>
       <div className="flex justify-center items-center gap-4">
         <Input
-          className="border-brand"
+          className="border-brand w-full"
           placeholder="Add a new task"
           value={todo}
           onChange={handleSetTodo}

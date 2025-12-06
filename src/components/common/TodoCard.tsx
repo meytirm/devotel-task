@@ -6,19 +6,18 @@ import {
 } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import type { TodoType } from "../../types/todos.ts";
 
 const TodoCard = ({
-  name,
-  completed,
   onRemove,
   onEdit,
   onCompleteToggle,
-  id,
   selectedId,
   loading,
+  todo,
 }: Props) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id });
+    useSortable({ id: todo.id });
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -32,17 +31,19 @@ const TodoCard = ({
       {...listeners}
     >
       <div className="flex items-center gap-2">
-        {id === selectedId && loading ? (
+        {todo.id === selectedId && loading ? (
           <LoaderCircleIcon className="animate-spin text-brand" />
         ) : (
           <CheckIcon
             size={20}
-            className={`${completed ? "text-green-400" : "text-gray-300"} cursor-pointer`}
+            className={`${todo.completed ? "text-green-400" : "text-gray-300"} cursor-pointer`}
             onMouseDown={onCompleteToggle}
           />
         )}
-        <div className={completed ? "line-through text-gray-500" : "font-bold"}>
-          {name}
+        <div
+          className={`${todo.completed ? "line-through text-gray-500" : "font-bold"} line-clamp-1`}
+        >
+          {todo.todo}
         </div>
       </div>
       <div className="flex items-center gap-2">
@@ -58,14 +59,12 @@ const TodoCard = ({
 };
 
 interface Props {
-  name: string;
-  completed: boolean;
   onRemove: () => void;
   onEdit: () => void;
   onCompleteToggle: () => void;
   selectedId: number;
-  id: number;
   loading: boolean;
+  todo: TodoType;
 }
 
 export default TodoCard;
