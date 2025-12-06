@@ -3,16 +3,15 @@ import TodoListContainer from "./TodoListContainer.tsx";
 import CreateTodoForm from "./common/CreateTodoForm.tsx";
 import { useFindAllTodosQuery } from "../hooks/todo/useFindAllTodosQuery.ts";
 import { useEffect, useState } from "react";
-import type { TodoType } from "../types/todos.ts";
+import type { TodoFormatType, TodoType } from "../types/todos.ts";
 import { setTodos } from "../store/todo/todoSlice.ts";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
+import TodoFormatSelect from "./common/TodoFormatSelect.tsx";
 
 const TodoApp = () => {
   const [search, setSearch] = useState<string>("");
-  const [statusFilter, setStatusFilter] = useState<
-    "all" | "complete" | "incomplete"
-  >("all");
+  const [statusFilter, setStatusFilter] = useState<TodoFormatType>("all");
   const { data, isError, isLoading, refetch } = useFindAllTodosQuery();
   const todos = useSelector((state: RootState) => state.todos);
   const dispatch = useDispatch<AppDispatch>();
@@ -26,8 +25,8 @@ const TodoApp = () => {
     const text = todo.todo.toString().toLowerCase();
     if (!text.includes(normalizedSearch)) return false;
     if (statusFilter === "all") return true;
-    if (statusFilter === "complete") return todo.completed === true;
-    return todo.completed === false;
+    if (statusFilter === "complete") return todo.completed;
+    return !todo.completed;
   });
 
   return (
@@ -43,19 +42,7 @@ const TodoApp = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <select
-              value={statusFilter}
-              onChange={(e) =>
-                setStatusFilter(
-                  e.target.value as "all" | "complete" | "incomplete",
-                )
-              }
-              className="border rounded px-2 py-1"
-            >
-              <option value="all">All</option>
-              <option value="complete">Complete</option>
-              <option value="incomplete">Incomplete</option>
-            </select>
+            <TodoFormatSelect value={statusFilter} onChange={setStatusFilter} />
           </div>
           <TodoListContainer
             todos={filteredTodos}
