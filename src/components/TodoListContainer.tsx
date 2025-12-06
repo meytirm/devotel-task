@@ -1,20 +1,13 @@
-import TodoCard from "./common/TodoCard.tsx";
 import NetworkError from "./common/NetworkError.tsx";
 import NetworkLoading from "./common/NetworkLoading.tsx";
-import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../store";
-import { reorderTodos, updateTodo } from "../store/todo/todoSlice.ts";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../store";
+import { updateTodo } from "../store/todo/todoSlice.ts";
 import { useState } from "react";
 import DeleteTodoModal from "./common/DeleteTodoModal.tsx";
 import type { TodoType } from "../types/todos.ts";
 import EditTodoModal from "./common/EditTodoModal.tsx";
-import { DndContext, closestCenter, type DragEndEvent } from "@dnd-kit/core";
-
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import TodoListContainerDraggable from "./TodoListContainerDraggable.tsx";
 
 const TodoListContainer = ({ todos, refetch, isError, isLoading }: Props) => {
   const [isOpenRemoveModal, setIsOpenRemoveModal] = useState(false);
@@ -27,7 +20,6 @@ const TodoListContainer = ({ todos, refetch, isError, isLoading }: Props) => {
     userId: 0,
   });
   const dispatch = useDispatch<AppDispatch>();
-  const { update } = useSelector((state: RootState) => state.loading);
 
   function handleRemoveTodo(todo: TodoType) {
     setTodoTask(todo);
@@ -50,17 +42,6 @@ const TodoListContainer = ({ todos, refetch, isError, isLoading }: Props) => {
 
   if (isLoading) return <NetworkLoading />;
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (!over || active.id === over.id) return;
-
-    const oldIndex = todos.findIndex((t) => t.id === active.id);
-    const newIndex = todos.findIndex((t) => t.id === over.id);
-
-    dispatch(reorderTodos({ oldIndex, newIndex }));
-  };
-
   return (
     <div className="flex flex-col gap-4 h-[500px] overflow-y-auto overflow-x-hidden">
       {todos.length === 0 ? (
@@ -68,30 +49,13 @@ const TodoListContainer = ({ todos, refetch, isError, isLoading }: Props) => {
           There is no todos!
         </div>
       ) : (
-        <DndContext
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-          modifiers={[restrictToVerticalAxis]}
-        >
-          <SortableContext
-            items={todos.map((t) => t.id)}
-            strategy={verticalListSortingStrategy}
-          >
-            {todos.map((todo) => (
-              <TodoCard
-                name={todo.todo}
-                key={todo.id}
-                completed={todo.completed}
-                onRemove={() => handleRemoveTodo(todo)}
-                onCompleteToggle={() => handleCompleteToggle(todo)}
-                onEdit={() => handleEditTodo(todo)}
-                id={todo.id}
-                selectedId={todoTask.id}
-                loading={update}
-              />
-            ))}
-          </SortableContext>
-        </DndContext>
+        <TodoListContainerDraggable
+          todos={todos}
+          onRemove={handleRemoveTodo}
+          onCompleteToggle={handleCompleteToggle}
+          onEdit={handleEditTodo}
+          selectedId={todoTask.id}
+        />
       )}
       <DeleteTodoModal
         isOpen={isOpenRemoveModal}
