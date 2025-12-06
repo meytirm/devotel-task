@@ -48,7 +48,6 @@ export const removeTodo = createAsyncThunk<
 export const updateTodo = createAsyncThunk<TodoType, { task: TodoType }>(
   "updateTodo",
   async ({ task }: { task: TodoType }) => {
-    console.log(task);
     if (task.isLocal) {
       return task as TodoType;
     }
