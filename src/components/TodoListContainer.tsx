@@ -62,7 +62,7 @@ const TodoListContainer = ({todos, refetch, isError, isLoading}: Props) => {
   };
 
   return (
-    <div className="flex flex-col gap-4 h-[500px] overflow-y-auto">
+    <div className="flex flex-col gap-4 h-[500px] overflow-y-auto overflow-x-hidden">
       {todos.length === 0 ?
         <div className="flex justify-center p-4 bg-purple-100 rounded-md">There is no todos!</div> :
         <DndContext collisionDetection={closestCenter}
