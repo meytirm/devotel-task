@@ -41,9 +41,7 @@ const TodoCard = ({
           />
         )}
         <div
-          className={
-            todo.completed ? "line-through text-gray-500" : "font-bold"
-          }
+          className={`${todo.completed ? "line-through text-gray-500" : "font-bold"} line-clamp-1`}
         >
           {todo.todo}
         </div>
