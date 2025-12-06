@@ -2,6 +2,7 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {todoService} from "../../service/todo";
 import type {DeletedTodoType, TodoType} from "../../types/todos.ts";
 import {createTodoCases, removeTodoCases, updateTodoCases} from "./todoCases.ts";
+import {arrayMove} from "@dnd-kit/sortable";
 
 export interface TodosState {
   loading: {
@@ -54,7 +55,11 @@ export const todoSlice = createSlice({
   initialState,
   reducers: {
     setTodos: (state, action) => {
-      state.todos = [...action.payload]
+      state.todos = action.payload
+    },
+    reorderTodos: (state, action) => {
+      const { oldIndex, newIndex } = action.payload;
+      state.todos = arrayMove(state.todos, oldIndex, newIndex);
     }
   },
   extraReducers: (builder) => {
@@ -64,5 +69,5 @@ export const todoSlice = createSlice({
   }
 })
 
-export const {setTodos} = todoSlice.actions
+export const {setTodos, reorderTodos} = todoSlice.actions
 export default todoSlice.reducer

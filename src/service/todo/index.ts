@@ -3,7 +3,7 @@ import type {PaginatedResponse} from "../../types/api.ts";
 import type {DeletedTodoType, TodoType} from "../../types/todos.ts";
 
 function findAll() {
-  return api.get<PaginatedResponse<{ todos: TodoType[] }>>("/todos/user/1")
+  return api.get<PaginatedResponse<{ todos: TodoType[] }>>("/todos")
 }
 
 function create(todo: string) {
