@@ -1,4 +1,4 @@
-import {LoaderCircleIcon} from "lucide-react";
+import { LoaderCircleIcon } from "lucide-react";
 
 const NetworkLoading = () => {
   return (
@@ -6,7 +6,7 @@ const NetworkLoading = () => {
       <LoaderCircleIcon className="animate-spin" />
       <div>Loading...</div>
     </div>
-  )
-}
+  );
+};
 
-export default NetworkLoading
+export default NetworkLoading;

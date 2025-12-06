@@ -7,6 +7,8 @@ export interface TodoType {
 }
 
 export type DeletedTodoType = TodoType & {
-  isDeleted: boolean,
-  deletedOn: Date
-}
+  isDeleted: boolean;
+  deletedOn: Date;
+};
+
+export type TodoFormatType = "all" | "complete" | "incomplete";
