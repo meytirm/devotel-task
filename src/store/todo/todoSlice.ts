@@ -55,7 +55,7 @@ export const todoSlice = createSlice({
   initialState,
   reducers: {
     setTodos: (state, action) => {
-      state.todos = [...action.payload]
+      state.todos = action.payload
     },
     reorderTodos: (state, action) => {
       const { oldIndex, newIndex } = action.payload;
