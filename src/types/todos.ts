@@ -7,6 +7,6 @@ export interface TodoType {
 }
 
 export type DeletedTodoType = TodoType & {
-  isDeleted: boolean,
-  deletedOn: Date
-}
+  isDeleted: boolean;
+  deletedOn: Date;
+};

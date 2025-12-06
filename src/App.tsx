@@ -1,9 +1,7 @@
 import TodoApp from "./components/TodoApp.tsx";
 
 function App() {
-  return (
-    <TodoApp/>
-  )
+  return <TodoApp />;
 }
 
-export default App
+export default App;
