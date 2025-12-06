@@ -8,7 +8,7 @@ import {z} from "zod";
 import {type ChangeEvent, type FormEvent, useState} from "react";
 
 const todoSchema = z.object({
-  todo: z.string().min(1, "!مقدار این فیلد نمیتواند خالی باشد"),
+  todo: z.string().min(1, 'This field is required.'),
 });
 const CreateTodoForm = () => {
   const [todo, setTodo] = useState('')

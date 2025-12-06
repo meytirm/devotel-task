@@ -10,7 +10,7 @@ import type {TodoType} from "../../types/todos.ts";
 import {z} from "zod";
 
 const todoSchema = z.object({
-  todo: z.string().min(1, "!مقدار این فیلد نمیتواند خالی باشد"),
+  todo: z.string().min(1, "This field is required."),
 });
 
 const EditTodoModal = ({isOpen, onClose, task}: Props) => {
@@ -58,7 +58,7 @@ const EditTodoModal = ({isOpen, onClose, task}: Props) => {
         <div>Are you sure about it?</div>
         <form className="flex flex-col gap-4 mt-4" onSubmit={handleOnSubmit}>
           <div className="w-full">
-            <Input className="border-brand w-full" placeholder="Add a new task" value={todo}
+            <Input className="border-brand w-full" placeholder="Edit todo" value={todo}
                    onChange={handleSetTodo}/>
           </div>
           {error && <p className="text-red-500">{error}</p>}
